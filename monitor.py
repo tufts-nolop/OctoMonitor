@@ -1,5 +1,6 @@
-import requests
 import datetime
+import json
+import requests
 
 printers: dict = {}
 credentials: list[str]
@@ -17,12 +18,20 @@ for url, api_key in printers.items():
         req = requests.get(url, headers={"X-Api-Key": api_key})
     except requests.exceptions.ConnectionError:
         print('Unable to connect')
+        print()
         continue
     except Exception as ex:
         print(f'Unexpected Error: {ex}')
+        print()
         continue
     
-    response = req.json()
+    response = json.loads(req.text)
+
+    if "state" not in response:
+        print(f'Unexpected Response: {response}')
+        print()
+        continue
+
     print(response["state"])
     progress = response["progress"]
     print(f'Progress: {progress["completion"]:.2f}%')
