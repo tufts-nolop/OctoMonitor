@@ -1,10 +1,10 @@
 Requirements:
 
-Python 3.0+ for the python script.\
+Python 3.0+ for the python script.
 
 or
 
-[jq](https://stedolan.github.io/jq/) for the bash script.\
+[jq](https://stedolan.github.io/jq/) for the bash script.
 
 The credentials file should have the following format.
 ```
