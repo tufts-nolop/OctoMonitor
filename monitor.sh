@@ -2,6 +2,9 @@
 input="credentials";
 while read -r line; do
   data=($line);
+  if [ -z $data ]; then
+    continue;
+  fi
   if [ $# -gt 0 ]; then
     if [[ ${data} != *${1}* ]]; then
       continue
