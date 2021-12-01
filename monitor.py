@@ -8,6 +8,7 @@ with open('credentials') as file:
     credentials = file.readlines()
 
 for credential in credentials:
+    if credential == "": continue
     [base_url, api_key] = credential.split()
     url = f'https://{base_url.strip()}/api/job'
     printers[url] = api_key.strip()
