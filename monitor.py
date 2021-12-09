@@ -28,13 +28,15 @@ for url, api_key in printers.items():
     
     response = json.loads(req.text)
 
-    if "state" not in response:
+    if "state" not in response or "progress" not in response:
         print(f'Unexpected Response: {response}')
         print()
         continue
 
     print(response["state"])
     progress = response["progress"]
-    print(f'Progress: {progress["completion"]:.2f}%')
-    print(f'Time left: {datetime.timedelta(seconds=progress["printTimeLeft"])}')
+    if progress["completion"] is None: print('Progress: N/A')
+    else: print(f'Progress: {progress["completion"]:.2f}%')
+    if progress["printTimeLeft"] is None: print('Time left: N/A')
+    else: print(f'Time left: {datetime.timedelta(seconds=progress["printTimeLeft"])}')
     print()
