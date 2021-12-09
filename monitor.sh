@@ -33,4 +33,3 @@ while read -r line; do
   echo "$(echo "scale=2 ; $left / 60" | bc) minutes left.";
   echo;
 done < $input;
-
