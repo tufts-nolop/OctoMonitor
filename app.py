@@ -46,4 +46,4 @@ def check_status():
 
         #print(f'Progress: {progress[url]["completion"]:.2f}%')
         #print(f'Time left: {datetime.timedelta(seconds=progress[url]["printTimeLeft"])}')
-    return render_template('index.html', response1=responses['p1'], response2 = responses['p4'])
+    return render_template('index.html', printers = printers, response1=responses['p1'], response2 = responses['p4'])
