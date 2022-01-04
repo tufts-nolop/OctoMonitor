@@ -13,16 +13,16 @@ with open('credentials.txt') as file:
 
 for credential in credentials:
     if credential == '': continue
-    [base_url, api_key] = credential.split()
-    url = f'https://{base_url.strip()}/api/job'
-    printers[url] = api_key.strip()
+    [hostname, api_key] = credential.split()
+    url = f'https://{hostname.strip()}.nolop.org/api/job'
+    printers[hostname] = (url, api_key.strip())
 print(printers)
 
 @app.route('/')
 def check_status():
     print(printers)
-    for url, api_key in printers.items():
-        print(f'Printer: P' + "".join(filter( lambda x: x in '0123456789', url )))
+    for (url, api_key) in printers.values():
+        print(url)
         try:
             req = requests.get(url, headers={"X-Api-Key": api_key}, timeout=10)
         except requests.exceptions.ConnectionError:
