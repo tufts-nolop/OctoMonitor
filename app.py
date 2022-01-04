@@ -12,7 +12,7 @@ with open('credentials') as file:
     credentials = file.readlines()
 
 for credential in credentials:
-    if credential == "": continue
+    if credential == '': continue
     [base_url, api_key] = credential.split()
     url = f'https://{base_url.strip()}/api/job'
     printers[url] = api_key.strip()
@@ -20,7 +20,6 @@ print(printers)
 
 @app.route('/')
 def check_status():
-    msg = ''
     print(printers)
     for url, api_key in printers.items():
         print(f'Printer: P' + "".join(filter( lambda x: x in '0123456789', url )))
@@ -43,7 +42,4 @@ def check_status():
             print()
             continue
         responses['p' + ''.join(filter( lambda x: x in '0123456789', url ))] = response
-
-        #print(f'Progress: {progress[url]["completion"]:.2f}%')
-        #print(f'Time left: {datetime.timedelta(seconds=progress[url]["printTimeLeft"])}')
-    return render_template('index.html', printers = printers, response1=responses['p1'], response2 = responses['p4'])
+    return render_template('index.html', printers = printers, responses = responses)
