@@ -8,7 +8,7 @@ app = Flask(__name__)
 printers = {}
 credentials = []
 responses = {}
-with open('credentials') as file:
+with open('credentials.txt') as file:
     credentials = file.readlines()
 
 for credential in credentials:
