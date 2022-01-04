@@ -7,54 +7,47 @@
 </head>
 <body>
 {% for printer in printers %}
-{{printer}}
-<div class="relative pt-1">
+<div class="relative px-5 pt-5">
   <div class="flex mb-2 items-center justify-between">
     <div>
-      <span
-        id="{{printer}}-status"
-        class="
-          text-xs
-          font-semibold
-          inline-block
-          py-1
-          px-2
-          uppercase
-          rounded-full
-          text-purple-600
-          bg-purple-200
-        "
-      >
+      {{printer}}
+      <span id="{{printer}}-status" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-purple-600 bg-purple-200">
         unknown
       </span>
     </div>
   </div>
-  <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-purple-200">
-    <div
-      id="{{printer}}-bar"
-      class="
-        shadow-none
-        flex flex-col
-        text-center
-        whitespace-nowrap
-        text-white
-        justify-center
-        bg-purple-500
-        w-0
-      "
-    >
+  <div id="{{printer}}-bar-bg" class="overflow-hidden h-2 text-xs flex rounded bg-purple-200">
+    <div id="{{printer}}-bar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500 w-0">
     </div>
   </div>
   <div class="text-left">
     <span
       id="{{printer}}-time-rem"
       class="text-xs font-semibold inline-block text-purple-600">
-      0 minutes remaining
     </span>
   </div>
 </div>
 {% endfor %}
 <script>
+    function to_dhms(seconds) { // from https://stackoverflow.com/a/48400665
+      var days     = Math.floor(seconds / (24*60*60));
+          seconds -= days    * (24*60*60);
+      var hours    = Math.floor(seconds / (60*60));
+          seconds -= hours   * (60*60);
+      var minutes  = Math.floor(seconds / (60));
+          seconds -= minutes * (60);
+      return ((0<days)?(days+" day, "):"")+hours+"h, "+minutes+"m and "+seconds+"s";
+    }
+    var colors = {
+        "Offline after error" : "red",
+        "Operational": "green",
+        "Printing": "purple"
+    };
+    var states = {
+        "Offline after error" : "Error",
+        "Operational": "Open",
+        "Printing": "Print in progress"
+    };
     let responses = {{ responses|tojson }};
     console.log(responses);
     printers = Object.keys(responses);
@@ -62,13 +55,25 @@
         console.log(printers);
         printers.forEach(function(element) {
             console.log(element)
-            let bar = document.getElementById(element + '-bar');
-            let status = document.getElementById(element + '-status');
-            bar.classList.remove('w-0');
+            let bar = document.getElementById(element + "-bar");
+            let barbg = document.getElementById(element + "-bar-bg");
+            let status = document.getElementById(element + "-status");
+            let timerem = document.getElementById(element + "-time-rem");
+            bar.classList.remove("w-0");
             response = responses[element];
             console.log(response.progress.printTimeLeft);
-            bar.style.width = parseInt(response.progress.printTimeLeft)/216 + "%";
-            status.textContent = response.state;
+            seconds_left = parseInt(response.progress.printTimeLeft);
+            bar.style.width = seconds_left/216 + "%"; // 216 seconds in 1% of 6 hours
+            if(seconds_left > 0) {
+                timerem.textContent = to_dhms(seconds_left) + " remaining";
+            }
+            status.textContent = states[response.state];
+            status.classList.remove("text-purple-600");
+            status.classList.add("text-" + colors[response.state] + "-600");
+            status.classList.remove("bg-purple-200");
+            status.classList.add("bg-" + colors[response.state] + "-200");
+            barbg.classList.remove("bg-purple-200");
+            barbg.classList.add("bg-" + colors[response.state] + "-200");
         });
     });
 </script>
