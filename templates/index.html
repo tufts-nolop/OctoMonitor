@@ -28,7 +28,7 @@
     </div>
     <div class="text-right">
       <span class="text-xs font-semibold inline-block text-purple-600">
-        {{ '%0.2f'|format(response2|float) }}%
+        {{ '%0.2f'|format(responses.p2.progress.printTimeLeft|float) }}%
       </span>
     </div>
   </div>
@@ -50,13 +50,13 @@
 </div>
 {% endfor %}
 <script>
-    let response = {{ response2|tojson }};
-    console.log(response);
+    let responses = {{ responses|tojson }};
+    console.log(responses);
     document.addEventListener("DOMContentLoaded", function(){
         let bar = document.getElementById('p2bar');
         bar.classList.remove('w-0');
-        console.log(response.progress.printTimeLeft/21600);
-        bar.style.width = response.progress.printTimeLeft/21600 + "%";
+        console.log(responses.p2.progress.printTimeLeft/21600);
+        bar.style.width = responses.p2.progress.printTimeLeft/21600 + "%";
     });
 </script>
 </body>
